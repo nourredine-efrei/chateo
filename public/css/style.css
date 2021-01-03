@@ -29,6 +29,21 @@ a {
 	text-decoration: none;
 }
 
+nav{
+	background-color: #6D4DF1;
+	font-size: 30px;
+	text-align: center;
+	font-family : 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	padding: 10px;
+
+	
+
+}
+nav a{
+	color: white;
+	margin: 0 20px 20px 0;
+}
+
 .btn {
 	cursor: pointer;
 	padding: 5px 15px;
