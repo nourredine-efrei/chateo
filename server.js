@@ -38,8 +38,22 @@ const client = new Client({
 
 client.connect();
 
+const query = `
+SELECT *
+FROM users
+`;
 
 
+client.query(query, (err, res) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    for (let row of res.rows) {
+        console.log(row);
+    }
+    client.end();
+});
 
 const botname = 'Chateo';
 //Run when client connects
