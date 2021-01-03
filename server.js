@@ -7,15 +7,15 @@ const connectionString = 'postgres://tujnfchbsgxwrn:151ce1735f91784ef1b15fd0d204
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
 const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require('./utils/users');
-const { fstat, writeFileSync, readFile } = require('fs');
+const { fstat, writeFileSync, readFile, readFileSync } = require('fs');
 const { response } = require('express');
 
 
 const app = express();
 const server = http.createServer(
-    {
-    key:'',
-    cert: ''},
+    /* {
+    key: readFileSync(path.join(__dirname, 'cert', 'private.key')),
+    cert: readFileSync(path.join(__dirname, 'cert', 'ca_bundle.crt'))},*/
     app);
 
 
@@ -25,20 +25,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-/*
+
 const client = new Client({
     user: "tujnfchbsgxwrn",
     password: "151ce1735f91784ef1b15fd0d204923c5d863eb1aa2a47f8803aabeff56d0d8c",
     database: "da43g7rmjqaks6",
     port: 5432,
     host: "ec2-52-213-173-172.eu-west-1.compute.amazonaws.com",
-    ssl: true
+    ssl: { rejectUnauthorized: false }
 
 });
 
 client.connect();
 
-*/
+
 
 
 const botname = 'Chateo';
