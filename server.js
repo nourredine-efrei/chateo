@@ -18,14 +18,14 @@ const server = http.createServer(
     cert: ''},
     app);
 
-    
+
 const io= socketio(server);
 //Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-
+/*
 const client = new Client({
     user: "tujnfchbsgxwrn",
     password: "151ce1735f91784ef1b15fd0d204923c5d863eb1aa2a47f8803aabeff56d0d8c",
@@ -38,7 +38,7 @@ const client = new Client({
 
 client.connect();
 
-
+*/
 
 
 const botname = 'Chateo';
