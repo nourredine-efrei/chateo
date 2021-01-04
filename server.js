@@ -101,7 +101,7 @@ io.on('connection', socket => {
         
         })();
         
-      
+        socket.emit('message', formatMessage(botname, "Ton adresse mail : " ));
        
 
         //Broadcast when a user connects
