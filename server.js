@@ -97,6 +97,7 @@ io.on('connection', socket => {
             ok= rows[0].email;
             console.log(rows[0].email);
             socket.emit('message', formatMessage(botname, "Ton adresse mail : " + ok));
+            socket.emit('message', formatMessage(botname, "Ton adresse mail : " ));
         
         })();
         
