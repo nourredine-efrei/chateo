@@ -9,6 +9,9 @@ const formatMessage = require('./utils/messages');
 const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require('./utils/users');
 const { fstat, writeFileSync, readFile, readFileSync } = require('fs');
 const { response } = require('express');
+const { doesNotMatch } = require('assert');
+const { callbackify } = require('util');
+
 
 
 const app = express();
@@ -36,24 +39,37 @@ const client = new Client({
 
 });
 
-client.connect();
-
-const query = `
-SELECT *
-FROM users
-`;
 
 
-client.query(query, (err, res) => {
-    if (err) {
-        console.error(err);
-        return;
+async function requete(q){
+
+    await client.connect();
+    let res
+    try{
+
+        await client.query('BEGIN');
+    
+    try{
+        res = await client.query(q);
+        await client.query('COMMIT');
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err
     }
-    for (let row of res.rows) {
-        console.log(row);
-    }
+} finally {
     client.end();
-});
+}
+    return res
+}
+
+
+
+
+
+
+
+
+
 
 const botname = 'Chateo';
 //Run when client connects
@@ -67,10 +83,25 @@ io.on('connection', socket => {
         socket.join(user.room);
 
 
+   
 
+  
 
         //Welcome current user
         socket.emit('message', formatMessage(botname, 'Welcome to Chateo'));
+        
+        (async() =>{
+
+            const {rows} = await requete(`SELECT email FROM users WHERE id=1 `);
+            console.log(JSON.stringify(rows));
+            ok= rows[0].email;
+            console.log(rows[0].email);
+            socket.emit('message', formatMessage(botname, "Ton adresse mail : " + ok));
+        
+        })();
+        
+      
+       
 
         //Broadcast when a user connects
 
