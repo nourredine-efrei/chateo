@@ -24,8 +24,8 @@
           
     
         
-          <button @click="deleteArticle(article.id)">Supprimer</button>
-          <button @click="editArticle(article)">Modifier</button>
+          <button v-if="isConnected" @click="deleteArticle(article.id)">Supprimer</button>
+          <button v-if="isConnected" @click="editArticle(article)">Modifier</button>
           </div>
         </div>
 
@@ -43,7 +43,7 @@
         <input type="text" v-model="editingArticle.image" placeholder="Lien vers l'image">
       </div>
     </article>
-    <form @submit.prevent="addArticle">
+    <form v-if="isConnected" @submit.prevent="addArticle">
       <h2>Ajouter un nouveau film/anime/série</h2>
       <input type="text" v-model="newArticle.nom" placeholder="Nom" required>
  
