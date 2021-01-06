@@ -23,7 +23,7 @@
          <a v-if="isConnected" v-bind:href="'../chat.html?room=' + article.nom ">Rejoindre le tchat </a>
           
     
-          <router-link to='/chat' v-if="isConnected"> Chat </router-link>
+        
           <button @click="deleteArticle(article.id)">Supprimer</button>
           <button @click="editArticle(article)">Modifier</button>
           </div>
