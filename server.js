@@ -1,18 +1,19 @@
 const path=require('path');
 const express = require('express');
 const http = require('http');
-const {Client} = require('pg');
-
+const {Client, Pool} = require('pg');
+const logger = require('morgan')
 const connectionString = 'postgres://tujnfchbsgxwrn:151ce1735f91784ef1b15fd0d204923c5d863eb1aa2a47f8803aabeff56d0d8c@ec2-52-213-173-172.eu-west-1.compute.amazonaws.com:5432/da43g7rmjqaks6';
 const socketio = require('socket.io');
-const formatMessage = require('./utils/messages');
-const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require('./utils/users');
+const formatMessage = require('./server/routes/utils/messages');
+const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require('./server/routes/utils/users');
 const { fstat, writeFileSync, readFile, readFileSync } = require('fs');
 const { response } = require('express');
 const { doesNotMatch } = require('assert');
 const { callbackify } = require('util');
-
-
+const apiRouter = require('./server/routes/api.js')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
 
 const app = express();
 const server = http.createServer(
@@ -21,6 +22,15 @@ const server = http.createServer(
     cert: readFileSync(path.join(__dirname, 'cert', 'ca_bundle.crt'))},*/
     app);
 
+    app.use(logger('dev'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
+app.use(session({ secret: 'grehjznejzkhgjrez', saveUninitialized: false, resave: false }))
+    app.use('/api/', apiRouter)
+
+    
+module.exports = app
 
 const io= socketio(server);
 //Set static folder
@@ -41,6 +51,8 @@ const client = new Client({
 
 
 
+
+/*
 async function requete(q){
 
     await client.connect();
@@ -57,15 +69,31 @@ async function requete(q){
         throw err
     }
 } finally {
-    client.end();
+    client.end(); 
 }
+
     return res
 }
 
 
 
 
+function promise_async(q){
+    return new Promise ((resolve, reject) => {
+        client.connect();
+        client.query(q).then(function(res){resolve ("ok")})
+        
+        .catch(function(e) {reject(e.stack)});
 
+
+
+        });
+    }
+        
+
+console.log(promise_async(`SELECT email FROM users WHERE id=1 `));
+
+*/
 
 
 
@@ -76,6 +104,22 @@ const botname = 'Chateo';
 
 io.on('connection', socket => {
 
+/*
+
+    function socket_adresse(){
+        (async() =>{
+    
+            const {rows} = await requete(`SELECT email FROM users WHERE id=1 `);
+            console.log(JSON.stringify(rows));
+            const ok= await rows[0].email;
+            console.log(rows[0].email);
+            socket.emit('message', formatMessage(botname, "Ton adresse mail : " + ok));
+           
+           
+        
+        })();
+        
+    } */
     socket.on('joinRoom', ({username, room}) => {
 
         const user= userJoin(socket.id, username, room);
@@ -89,17 +133,9 @@ io.on('connection', socket => {
 
         //Welcome current user
         socket.emit('message', formatMessage(botname, 'Welcome to Chateo'));
-        
-        (async() =>{
-
-            const {rows} = await requete(`SELECT email FROM users WHERE id=1 `);
-            console.log(JSON.stringify(rows));
-            ok= rows[0].email;
-            console.log(rows[0].email);
-            socket.emit('message', formatMessage(botname, "Ton adresse mail : " + ok));
-           
-        
-        })();
+       // socket_adresse();
+      
+      
         
        
        
