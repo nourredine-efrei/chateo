@@ -119,8 +119,8 @@ article {
 }
 
 .article-img div {
-  width: 200px;
-  height: 200px;
+  width: 500px;
+  height: 300px;
   background-size: cover;
 }
 
